@@ -3,7 +3,7 @@ import java.math.*;
 import java.util.*;
 
 // problem : find first and last position
-// of an x number in sorted array and return 
+// of an x number in sorted array and return
 // [first , last] otherways return [-1,-1]
 
 class FirstLast{
@@ -14,7 +14,7 @@ class FirstLast{
          int mid = l + (r - l) / 2;
          //System.out.println("mid : "+mid);
 
-         if (arr[mid] == x && arr[mid-1] != x)
+         if (arr[mid] == x && arr[mid-1] < x)
              return mid;
 
          if (arr[mid] < x)
@@ -27,11 +27,30 @@ class FirstLast{
      return -1;
    }
 
+   static int binaryLastSearch(int arr[], int l, int r, int x){
+      if (r >= l) {
+          int mid = l + (r - l) / 2;
+          //System.out.println("mid : "+mid);
+
+          if (arr[mid] == x && arr[mid+1] > x)
+              return mid;
+
+          if (arr[mid] > x)
+               return binaryLastSearch(arr, l, mid - 1, x);
+
+          return binaryLastSearch(arr, mid + 1, r, x);
+
+      }
+
+      return -1;
+    }
+
   public static int[] firstLast (int[] arr,int num){
     int first = -1;
     int last = -1;
+    int n = arr.length -1;
 
-    first = binaryFirstSearch(arr,0,arr.length -1 , num);
+    first = binaryFirstSearch(arr,0, n , num);
     //System.out.println("first : "+first);
 
     //find number of occurences to get last
@@ -40,16 +59,19 @@ class FirstLast{
     if (first == -1)
         last = -1;
 
-
+    //first method to find last
     // Count elements on right side.
-    last = first;
-    int right = first + 1;
-    while (right < arr.length  && arr[right] == num)
-        {
-          last++;
-          right++;
-        }
+    // last = first;
+    // int right = first + 1;
+    // while (right < arr.length  && arr[right] == num)
+    //     {
+    //       last++;
+    //       right++;
+    //     }
 
+    //second method will be using binary search tree
+    if(first != -1)
+      last = binaryLastSearch(arr , first , n , num);
 
     System.out.println("Positions are : ("+first+","+last+")");
 
